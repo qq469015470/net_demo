@@ -6,6 +6,7 @@ from torch.utils.data import DataLoader
 from torchvision import transforms
 import PIL
 import sys
+import os
 
 class Net(torch.nn.Module):
     def __init__(self):
@@ -50,7 +51,9 @@ train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)#�
 test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)#按皮批次划分数据
 
 model = Net()
-model.load_state_dict(torch.load('checkpoint.pth')['model']);#读取权重
+if os.path.exists('checkpoint.pth'):
+	model.load_state_dict(torch.load('checkpoint.pth')['model']);#读取权重
+
 criterion = torch.nn.CrossEntropyLoss()#定义损失函数,如何去算出梯度
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, momentum=momentum)#优化器,如何去更新梯度
 
@@ -146,3 +149,6 @@ if __name__ == '__main__':
         plt.xticks([])
         plt.yticks([])
         plt.show()
+    else:
+        print('参数不正确')
+        exit(0)
